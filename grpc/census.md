@@ -22,7 +22,7 @@ struct census_aggregation_ops {
 
 #### context.c
 
-```
+```c
 // Functions in this file support the public context API, including
 // encoding/decoding as part of context propagation across RPC's. The overall
 // requirements (in approximate priority order) for the
@@ -37,13 +37,11 @@ struct census_aggregation_ops {
 
 #### grpc_context.c
 
-```
-grpc_census_call_set_context
-```
+1. grpc\_census\_call\_set\_context
 
 #### grpc_filter.c
 
-```
+```c
 typedef struct call_data {
   census_op_id op_id;
   census_context *ctxt;
@@ -57,7 +55,7 @@ typedef struct call_data {
 } call_data;
 ```
 
-```
+```c
 typedef struct channel_data { uint8_t unused; } channel_data;
 ```
 
