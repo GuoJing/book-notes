@@ -1,6 +1,6 @@
 ### Overview
 
-grpc/src/core/census/context.c
+grpc/src/core/census/
 
 A resource measurement and tracing system of gRPC.
 
