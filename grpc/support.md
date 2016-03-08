@@ -206,7 +206,7 @@ The important function is, still need to look into the code.
 
 in file *include/grpc/impl/codegen/atm.h*
 
-```
+```c
 #if defined(GPR_GCC_ATOMIC)
 #include <grpc/impl/codegen/atm_gcc_atomic.h>
 #elif defined(GPR_GCC_SYNC)
@@ -222,7 +222,7 @@ in file *include/grpc/impl/codegen/atm.h*
 
 Provide a wrapped memcpy for targets that need to be backwards compatible with older libc's. Enable by setting LDFLAGS=-Wl,-wrap,memcpy when linking.
 
-```
+```c
 #ifdef __linux__
 #ifdef __x86_64__
 __asm__(".symver memcpy,memcpy@GLIBC_2.2.5");
