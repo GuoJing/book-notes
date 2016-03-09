@@ -309,7 +309,7 @@ Call stack is laid out as: {
   (((x) + GPR_MAX_ALIGNMENT - 1u) & ~(GPR_MAX_ALIGNMENT - 1u))
 ```
 
-##### Channel stack init
+##### channel/call stack init
 
 ```c
 void grpc_channel_stack_init(grpc_exec_ctx *exec_ctx, int initial_refs,
@@ -360,37 +360,38 @@ void grpc_channel_stack_init(grpc_exec_ctx *exec_ctx, int initial_refs,
 }
 ```
 
-##### Channel destory
+##### channel/call destory
 
 ```c
-void grpc_call_stack_destroy(grpc_exec_ctx *exec_ctx, grpc_call_stack *stack) {
-  grpc_call_element *elems = CALL_ELEMS_FROM_STACK(stack);
+void grpc_channel_stack_destroy(grpc_exec_ctx *exec_ctx,
+                                grpc_channel_stack *stack) {
+  grpc_channel_element *channel_elems = CHANNEL_ELEMS_FROM_STACK(stack);
   size_t count = stack->count;
   size_t i;
 
   /* destroy per-filter data */
   for (i = 0; i < count; i++) {
-    elems[i].filter->destroy_call_elem(exec_ctx, &elems[i]);
+    channel_elems[i].filter->destroy_channel_elem(exec_ctx, &channel_elems[i]);
   }
 }
 ```
 
-##### gRPC call/channel next op
+##### gRPC channel/call next op
 
 ```c
+void grpc_channel_next_op(grpc_exec_ctx *exec_ctx, grpc_channel_element *elem,
+                          grpc_transport_op *op) {
+  /* the same as below */
+  grpc_channel_element *next_elem = elem + 1;
+  next_elem->filter->start_transport_op(exec_ctx, next_elem, op);
+}
+
 void grpc_call_next_op(grpc_exec_ctx *exec_ctx, grpc_call_element *elem,
                        grpc_transport_stream_op *op) {
   /* get next element from call elements */
   grpc_call_element *next_elem = elem + 1;
   /* use filter from callelement */
   next_elem->filter->start_transport_stream_op(exec_ctx, next_elem, op);
-}
-
-void grpc_channel_next_op(grpc_exec_ctx *exec_ctx, grpc_channel_element *elem,
-                          grpc_transport_op *op) {
-  /* the same */
-  grpc_channel_element *next_elem = elem + 1;
-  next_elem->filter->start_transport_op(exec_ctx, next_elem, op);
 }
 ```
 
