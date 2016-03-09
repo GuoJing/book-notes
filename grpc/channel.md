@@ -395,3 +395,35 @@ void grpc_call_next_op(grpc_exec_ctx *exec_ctx, grpc_call_element *elem,
 }
 ```
 
+#### connected_channel.h
+
+1. void grpc\_connected\_channel\_bind\_transport
+2. grpc\_stream* grpc\_connected\_channel\_get\_stream
+
+A channel filter representing a channel that is on a connected transport. This filter performs actual sending and receiving of messages.
+
+这个文件里定义了一个 `grpc_connected_channel_filter`，在已经连接上的传输层中执行发送和接收信息。
+
+```c
+extern const grpc_channel_filter grpc_connected_channel_filter;
+```
+
+检查 gRPC channel 连接状态的函数，其他代码可以使用该实现。
+
+1. grpc_connectivity_state grpc_client_channel_check_connectivity_state
+2. void grpc_client_channel_watch_connectivity_state
+
+#### conntected_channel.c
+
+1. connected\_channel\_channel\_data
+2. connected\_channel\_call\_data
+
+```c
+typedef struct connected_channel_channel_data {
+  grpc_transport *transport;
+} channel_data;
+
+typedef struct connected_channel_call_data { void *unused; } call_data;
+```
+
+我们在这里需要去看 [Transport](transport.md) 的实现。
